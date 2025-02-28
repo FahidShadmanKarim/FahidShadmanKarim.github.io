@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Performance Report</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'brand-orange': '#F5A524',
+                        'brand-pink': '#FFF5F7',
+                        'brand-purple': '#4B2840'
+                    },
+                    fontFamily: {
+                        'sans': ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .gradient-border {
+            position: relative;
+            border-radius: 0.75rem;
+            overflow: hidden;
+        }
+        .gradient-border::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #F5A524, #4B2840);
+            border-radius: 0.75rem;
+            z-index: -1;
+            opacity: 0.1;
+            transition: opacity 0.3s ease;
+        }
+        .gradient-border:hover::before {
+            opacity: 0.2;
+        }
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+        }
+        .section-content {
+            transition: transform 0.3s ease;
+        }
+        .section-content:hover {
+            transform: translateY(-2px);
+        }
+
+        @media print {
+            @page {
+                margin: 0.5in;
+                size: A4;
+            }
+
+            body {
+                background: none !important;
+                color: black;
+            }
+
+            .glass-effect {
+                background: white !important;
+                backdrop-filter: none;
+                border: none !important;
+                box-shadow: none !important;
+            }
+
+            section {
+                break-inside: avoid;
+                page-break-inside: avoid;
+                background: white !important;
+                border: 1px solid #eee !important;
+                margin-bottom: 1rem !important;
+                padding: 1.5rem !important;
+            }
+
+            .section-content:hover {
+                transform: none;
+            }
+
+            canvas {
+                max-height: 400px !important;
+            }
+
+            .gradient-border::before {
+                display: none;
+            }
+
+            .bg-gradient-to-br {
+                background: white !important;
+            }
+
+            header {
+                margin-bottom: 2rem !important;
+            }
+
+            .shadow-lg, .shadow-sm {
+                box-shadow: none !important;
+            }
+
+            .hover\:shadow-md:hover {
+                box-shadow: none !important;
+            }
+
+            .bg-brand-orange\/10 {
+                background-color: transparent !important;
+                border: 1px solid #F5A524;
+            }
+
+            .section-content {
+                break-inside: avoid;
+                page-break-inside: avoid;
+            }
+
+            .grid {
+                break-inside: avoid;
+                page-break-inside: avoid;
+            }
+
+            h1, h2, h3 {
+                break-after: avoid;
+                page-break-after: avoid;
+            }
+
+            table {
+                break-inside: avoid;
+                page-break-inside: avoid;
+            }
+
+            /* Ensure charts are properly sized for print */
+            canvas {
+                break-inside: avoid;
+                page-break-inside: avoid;
+            }
+
+            /* Remove hover effects for print */
+            .hover\:bg-white\/50:hover {
+                background: none !important;
+            }
+
+            .hover\:border-brand-orange\/20:hover {
+                border-color: #eee !important;
+            }
+
+            /* Adjust spacing for print */
+            .mb-12 {
+                margin-bottom: 2rem !important;
+            }
+
+            .p-8 {
+                padding: 1.5rem !important;
+            }
+
+            /* Ensure text remains readable */
+            .text-gray-700 {
+                color: black !important;
+            }
+
+            /* Keep brand colors for important elements */
+            .text-brand-purple {
+                color: #4B2840 !important;
+            }
+
+            .text-brand-orange {
+                color: #F5A524 !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-brand-pink via-white to-brand-pink/20 min-h-screen font-sans print:bg-white">
+    <!-- Header -->
+    <header class="glass-effect py-12 px-4 shadow-lg mb-12 border-b border-white/20 print:border-gray-200">
+        <div class="container mx-auto max-w-6xl">
+            <div class="flex flex-col items-center text-center space-y-4">
+                <span class="text-brand-orange text-sm font-semibold tracking-wider uppercase px-4 py-1 bg-brand-orange/10 rounded-full">Annual Report</span>
+                <h1 class="text-5xl font-bold text-brand-purple">Final Report of Year - 2</h1>
+                <div class="flex items-center space-x-3 mt-4">
+                    <h2 class="text-2xl font-semibold text-brand-orange">NNZ-QUASEM SCHOOL</h2>
+                    <span class="text-gray-400">|</span>
+                    <p class="text-xl text-gray-600">Academic Year 2023-2024</p>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto max-w-6xl px-4 py-4">
+        <!-- Needs Assessment Feedback -->
+        <section class="gradient-border bg-white/95 rounded-xl shadow-sm p-8 mb-12">
+            <div class="flex items-center space-x-4 mb-8">
+                <div class="w-1.5 h-12 bg-gradient-to-b from-brand-orange to-brand-purple rounded-full"></div>
+                <div>
+                    <span class="text-brand-orange text-sm font-medium uppercase tracking-wider">Section 1</span>
+                    <h2 class="text-3xl font-bold text-brand-purple">Basic Information from Feedback Form</h2>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="section-content bg-gradient-to-br from-brand-pink/50 to-white p-6 rounded-xl shadow-sm">
+                    <table class="w-full">
+                        <tbody class="divide-y divide-gray-200/50">
+                            <tr class="hover:bg-white/50 transition-colors">
+                                <td class="py-4 text-gray-700 font-medium">Teacher Count</td>
+                                <td class="py-4 text-brand-purple font-bold text-right">7</td>
+                            </tr>
+                            <tr class="hover:bg-white/50 transition-colors">
+                                <td class="py-4 text-gray-700 font-medium">Female (Percent)</td>
+                                <td class="py-4 text-brand-purple font-bold text-right">57.1%</td>
+                            </tr>
+                            <tr class="hover:bg-white/50 transition-colors">
+                                <td class="py-4 text-gray-700 font-medium">Commitment to apply (Percent)</td>
+                                <td class="py-4 text-brand-purple font-bold text-right">100%</td>
+                            </tr>
+                            <tr class="hover:bg-white/50 transition-colors">
+                                <td class="py-4 text-gray-700 font-medium">Permission to promo consent (Percent)</td>
+                                <td class="py-4 text-brand-purple font-bold text-right">71.4%</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="space-y-6">
+                    <div class="section-content bg-white p-8 rounded-xl border border-gray-100 hover:border-brand-orange/20 transition-all">
+                        <h3 class="font-semibold text-brand-purple text-xl mb-4">Result Comparison</h3>
+                        <p class="text-gray-700 leading-relaxed">
+                            The data indicates that <span class="font-semibold text-brand-purple">7 teachers</span> are present to complete this feedback form, 
+                            <span class="text-brand-orange font-semibold">57.1%</span> are women. They showed 
+                            that their commitment to apply is <span class="text-brand-purple font-semibold">100%</span> and 
+                            promotional consent authorization is <span class="text-brand-orange font-semibold">71.4%</span>.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Teacher Satisfaction Levels -->
+        <section class="gradient-border bg-white/95 rounded-xl shadow-sm p-8 mb-12">
+            <div class="flex items-center space-x-4 mb-8">
+                <div class="w-1.5 h-12 bg-gradient-to-b from-brand-orange to-brand-purple rounded-full"></div>
+                <div>
+                    <span class="text-brand-orange text-sm font-medium uppercase tracking-wider">Section 2</span>
+                    <h2 class="text-3xl font-bold text-brand-purple">Teacher Satisfaction Levels</h2>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="section-content bg-gradient-to-br from-brand-pink/50 to-white p-4 rounded-lg">
+                    <canvas id="satisfactionChart"></canvas>
+                </div>
+                <div class="space-y-4">
+                    <div class="section-content bg-white p-4 rounded-lg border border-gray-100">
+                        <h3 class="font-semibold text-brand-purple">Satisfaction Overview</h3>
+                        <ul class="list-disc ml-4 mt-2 text-gray-700">
+                            <li>75% of teachers reported high satisfaction</li>
+                            <li>20% reported moderate satisfaction</li>
+                            <li>Only 5% reported dissatisfaction</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Course Quiz Outcomes -->
+        <section class="gradient-border bg-white/95 rounded-xl shadow-sm p-8 mb-12">
+            <div class="flex items-center space-x-4 mb-8">
+                <div class="w-1.5 h-12 bg-gradient-to-b from-brand-orange to-brand-purple rounded-full"></div>
+                <div>
+                    <span class="text-brand-orange text-sm font-medium uppercase tracking-wider">Section 3</span>
+                    <h2 class="text-3xl font-bold text-brand-purple">Course Quiz Outcomes</h2>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="section-content bg-gradient-to-br from-brand-pink/50 to-white p-4 rounded-lg">
+                    <canvas id="quizChart"></canvas>
+                </div>
+                <div class="space-y-4">
+                    <div class="section-content bg-white p-4 rounded-lg border border-gray-100">
+                        <h3 class="font-semibold text-brand-purple">Key Findings</h3>
+                        <ul class="list-disc ml-4 mt-2 text-gray-700">
+                            <li>85% average success rate across all quizzes</li>
+                            <li>Highest performance in Mathematics</li>
+                            <li>Areas for improvement identified in Science</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Workshop Pre and Post-test Outcomes -->
+        <section class="gradient-border bg-white/95 rounded-xl shadow-sm p-8 mb-12">
+            <div class="flex items-center space-x-4 mb-8">
+                <div class="w-1.5 h-12 bg-gradient-to-b from-brand-orange to-brand-purple rounded-full"></div>
+                <div>
+                    <span class="text-brand-orange text-sm font-medium uppercase tracking-wider">Section 4</span>
+                    <h2 class="text-3xl font-bold text-brand-purple">Difference Between Pre-Test and Post-Test Result</h2>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 gap-6">
+                <div class="section-content bg-gradient-to-br from-brand-pink/50 to-white p-4 rounded-lg" style="height: 500px;">
+                    <canvas id="workshopChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Workshop Feedback -->
+        <section class="gradient-border bg-white/95 rounded-xl shadow-sm p-8 mb-12">
+            <div class="flex items-center space-x-4 mb-8">
+                <div class="w-1.5 h-12 bg-gradient-to-b from-brand-orange to-brand-purple rounded-full"></div>
+                <div>
+                    <span class="text-brand-orange text-sm font-medium uppercase tracking-wider">Section 5</span>
+                    <h2 class="text-3xl font-bold text-brand-purple">Improvement level in Percentage</h2>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 gap-6">
+                <div class="section-content bg-gradient-to-br from-brand-pink/50 to-white p-4 rounded-lg" style="height: 400px;">
+                    <canvas id="feedbackChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- Classroom Observation Scores -->
+        <section class="gradient-border bg-white/95 rounded-xl shadow-sm p-8 mb-12">
+            <div class="flex items-center space-x-4 mb-8">
+                <div class="w-1.5 h-12 bg-gradient-to-b from-brand-orange to-brand-purple rounded-full"></div>
+                <div>
+                    <span class="text-brand-orange text-sm font-medium uppercase tracking-wider">Section 6</span>
+                    <h2 class="text-3xl font-bold text-brand-purple">Classroom Observation Scores</h2>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="section-content bg-gradient-to-br from-brand-pink/50 to-white p-4 rounded-lg">
+                    <canvas id="observationChart"></canvas>
+                </div>
+                <div class="space-y-4">
+                    <div class="section-content bg-white p-4 rounded-lg border border-gray-100">
+                        <h3 class="font-semibold text-brand-purple">Observation Highlights</h3>
+                        <ul class="list-disc ml-4 mt-2 text-gray-700">
+                            <li>Strong student engagement observed</li>
+                            <li>Effective use of teaching aids</li>
+                            <li>Clear communication of learning objectives</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Coaching Outcomes -->
+        <section class="gradient-border bg-white/95 rounded-xl shadow-sm p-8 mb-12">
+            <div class="flex items-center space-x-4 mb-8">
+                <div class="w-1.5 h-12 bg-gradient-to-b from-brand-orange to-brand-purple rounded-full"></div>
+                <div>
+                    <span class="text-brand-orange text-sm font-medium uppercase tracking-wider">Section 7</span>
+                    <h2 class="text-3xl font-bold text-brand-purple">Coaching Outcomes</h2>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="section-content bg-gradient-to-br from-brand-pink/50 to-white p-4 rounded-lg">
+                    <canvas id="coachingChart"></canvas>
+                </div>
+                <div class="space-y-4">
+                    <div class="section-content bg-white p-4 rounded-lg border border-gray-100">
+                        <h3 class="font-semibold text-brand-purple">Key Improvements</h3>
+                        <div class="grid grid-cols-2 gap-4 mt-2">
+                            <div class="text-center">
+                                <p class="text-2xl font-bold text-brand-orange">+38%</p>
+                                <p class="text-sm text-gray-600">Teaching Skills</p>
+                            </div>
+                            <div class="text-center">
+                                <p class="text-2xl font-bold text-brand-orange">+42%</p>
+                                <p class="text-sm text-gray-600">Student Interaction</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        const chartConfig = {
+            backgroundColor: '#F5A524',
+            borderColor: '#F5A524',
+            color: '#4B2840',
+            options: {
+                responsive: true,
+                maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        labels: {
+                            font: {
+                                family: 'Inter'
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        // Teacher Satisfaction Chart
+        new Chart(document.getElementById('satisfactionChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Highly Satisfied', 'Moderate', 'Not Satisfied'],
+                datasets: [{
+                    label: 'Satisfaction Level (%)',
+                    data: [75, 20, 5],
+                    backgroundColor: [
+                        'rgba(245, 165, 36, 0.8)',  // Orange for Highly Satisfied
+                        'rgba(245, 165, 36, 0.5)',  // Lighter Orange for Moderate
+                        'rgba(245, 165, 36, 0.3)'   // Lightest Orange for Not Satisfied
+                    ],
+                    borderColor: '#F5A524',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        title: {
+                            display: true,
+                            text: 'Percentage (%)'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Satisfaction Level'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+
+        // Quiz Outcomes Chart
+        new Chart(document.getElementById('quizChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Mathematics', 'Science', 'English', 'History'],
+                datasets: [{
+                    label: 'Average Score (%)',
+                    data: [85, 72, 78, 80],
+                    backgroundColor: 'rgba(245, 165, 36, 0.5)',
+                    borderColor: '#F5A524',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100
+                    }
+                }
+            }
+        });
+
+        // Workshop Pre/Post Test Chart
+        new Chart(document.getElementById('workshopChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Assessment in The New Curriculum', 'Classroom Management', 'Mathematics', 'English'],
+                datasets: [{
+                    label: 'Pre-Test Result',
+                    data: [50, 50, 66.7, 61.1],
+                    backgroundColor: 'rgba(169, 169, 169, 0.7)',
+                    borderColor: 'rgba(169, 169, 169, 1)',
+                    borderWidth: 1
+                }, {
+                    label: 'Post-Test Result',
+                    data: [90.5, 76.2, 100, 95.2],
+                    backgroundColor: 'rgba(245, 165, 36, 0.7)',
+                    borderColor: '#F5A524',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        max: 120,
+                        grid: {
+                            display: false
+                        },
+                        title: {
+                            display: true,
+                            text: 'Score (%)'
+                        }
+                    },
+                    y: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            padding: 20
+                        }
+                    }
+                },
+                barPercentage: 0.8,
+                categoryPercentage: 0.7
+            }
+        });
+
+        // Observation Chart
+        new Chart(document.getElementById('observationChart'), {
+            type: 'radar',
+            data: {
+                labels: ['Student Engagement', 'Teaching Methods', 'Classroom Management', 'Content Delivery', 'Time Management'],
+                datasets: [{
+                    label: 'Score',
+                    data: [85, 88, 75, 82, 79],
+                    backgroundColor: 'rgba(245, 165, 36, 0.2)',
+                    borderColor: '#F5A524',
+                    pointBackgroundColor: '#F5A524'
+                }]
+            }
+        });
+
+        // Coaching Outcomes Chart
+        new Chart(document.getElementById('coachingChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Teaching Skills', 'Student Interaction', 'Lesson Planning', 'Assessment'],
+                datasets: [{
+                    label: 'Pre-coaching',
+                    data: [50, 45, 55, 48],
+                    backgroundColor: 'rgba(75, 40, 64, 0.3)'
+                }, {
+                    label: 'Post-coaching',
+                    data: [88, 87, 85, 82],
+                    backgroundColor: 'rgba(245, 165, 36, 0.7)'
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100
+                    }
+                }
+            }
+        });
+
+        // Workshop Feedback Chart
+        new Chart(document.getElementById('feedbackChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Assessment in The New Curriculum', 'Classroom Management', 'Mathematics', 'English'],
+                datasets: [{
+                    label: 'Improvement (%)',
+                    data: [81, 52.4, 49.9, 55.8],
+                    backgroundColor: 'rgba(245, 165, 36, 0.7)',
+                    borderColor: '#F5A524',
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.1)',
+                            drawBorder: false
+                        },
+                        ticks: {
+                            stepSize: 25
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                barPercentage: 0.5
+            }
+        });
+
+        // Add print-specific chart options
+        window.addEventListener('beforeprint', function() {
+            Chart.instances.forEach(chart => {
+                chart.resize();
+            });
+        });
+    </script>
+</body>
+</html> 
