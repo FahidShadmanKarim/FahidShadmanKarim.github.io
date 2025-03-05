@@ -6,6 +6,7 @@
     <title>School Performance Report</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
@@ -13,7 +14,7 @@
                 extend: {
                     colors: {
                         'brand-orange': '#F5A524',
-                        'brand-pink': '#FFF5F7',
+                        'brand-bg': '#f7f9fc',
                         'brand-purple': '#4B2840'
                     },
                     fontFamily: {
@@ -28,26 +29,70 @@
             position: relative;
             border-radius: 0.75rem;
             overflow: hidden;
+            border: 1px solid rgba(245, 165, 36, 0.15);
+            background: linear-gradient(to bottom right, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.98));
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+            transition: all 0.3s ease;
         }
-        .gradient-border::before {
+        .gradient-border:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .section-content {
+            transition: all 0.3s ease;
+            border: 1px solid rgba(245, 165, 36, 0.15);
+            background: linear-gradient(145deg, #ffffff, #fcfcfc);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+        .section-content:hover {
+            transform: translateY(-2px);
+            border-color: rgba(245, 165, 36, 0.3);
+            box-shadow: 0 4px 12px rgba(245, 165, 36, 0.08);
+        }
+        .chart-container {
+            background: linear-gradient(145deg, rgba(247, 249, 252, 0.8), rgba(255, 255, 255, 0.95));
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(245, 165, 36, 0.15);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+        .section-header {
+            position: relative;
+            padding-left: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .section-header::before {
             content: '';
             position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(45deg, #F5A524, #4B2840);
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(to bottom, #F5A524, #4B2840);
+            border-radius: 2px;
+        }
+        .insight-card {
+            background: linear-gradient(145deg, #ffffff, #fcfcfc);
             border-radius: 0.75rem;
-            z-index: -1;
-            opacity: 0.1;
-            transition: opacity 0.3s ease;
+            padding: 1.5rem;
+            border: 1px solid rgba(245, 165, 36, 0.15);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+            transition: all 0.3s ease;
         }
-        .gradient-border:hover::before {
-            opacity: 0.2;
+        .insight-card:hover {
+            border-color: rgba(245, 165, 36, 0.3);
+            box-shadow: 0 8px 16px rgba(245, 165, 36, 0.08);
         }
-        .glass-effect {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
+        .highlight-box {
+            background: linear-gradient(145deg, rgba(247, 249, 252, 0.9), rgba(255, 255, 255, 0.95));
+            border-radius: 0.5rem;
+            padding: 1rem;
+            border: 1px solid rgba(245, 165, 36, 0.15);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.02);
+        }
+        .highlight-box:hover {
+            background: linear-gradient(145deg, rgba(245, 165, 36, 0.08), rgba(245, 165, 36, 0.03));
+            border-color: rgba(245, 165, 36, 0.25);
         }
         .section-content {
             transition: transform 0.3s ease;
@@ -176,7 +221,7 @@
         }
     </style>
 </head>
-<body class="bg-gradient-to-br from-brand-pink via-white to-brand-pink/20 min-h-screen font-sans print:bg-white">
+<body class="bg-gradient-to-br from-brand-bg via-white to-brand-bg/20 min-h-screen font-sans print:bg-white">
     <!-- Header -->
     <header class="glass-effect py-12 px-4 shadow-lg mb-12 border-b border-white/20 print:border-gray-200">
         <div class="container mx-auto max-w-6xl">
@@ -195,15 +240,12 @@
     <main class="container mx-auto max-w-6xl px-4 py-4">
         <!-- Needs Assessment Feedback -->
         <section class="gradient-border bg-white/95 rounded-xl shadow-sm p-8 mb-12">
-            <div class="flex items-center space-x-4 mb-8">
-                <div class="w-1.5 h-12 bg-gradient-to-b from-brand-orange to-brand-purple rounded-full"></div>
-                <div>
-                    <span class="text-brand-orange text-sm font-medium uppercase tracking-wider">Section 1</span>
-                    <h2 class="text-3xl font-bold text-brand-purple">Basic Information from Feedback Form</h2>
-                </div>
+            <div class="section-header">
+                <span class="text-brand-orange text-sm font-medium uppercase tracking-wider">SECTION 1: Attitude</span>
+                <h2 class="text-3xl font-bold text-brand-purple mt-2">Basic Information from Feedback Survey</h2>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="section-content bg-gradient-to-br from-brand-pink/50 to-white p-6 rounded-xl shadow-sm">
+                <div class="section-content bg-gradient-to-br from-brand-bg/50 to-white p-6 rounded-xl shadow-sm">
                     <table class="w-full">
                         <tbody class="divide-y divide-gray-200/50">
                             <tr class="hover:bg-white/50 transition-colors">
@@ -241,15 +283,12 @@
 
         <!-- Teacher Satisfaction Levels -->
         <section class="gradient-border bg-white/95 rounded-xl shadow-sm p-8 mb-12">
-            <div class="flex items-center space-x-4 mb-8">
-                <div class="w-1.5 h-12 bg-gradient-to-b from-brand-orange to-brand-purple rounded-full"></div>
-                <div>
-                    <span class="text-brand-orange text-sm font-medium uppercase tracking-wider">Section 2</span>
-                    <h2 class="text-3xl font-bold text-brand-purple">Teacher Satisfaction Levels</h2>
-                </div>
+            <div class="section-header">
+                <span class="text-brand-orange text-sm font-medium uppercase tracking-wider">Section 2: Attitude</span>
+                <h2 class="text-3xl font-bold text-brand-purple mt-2">Teacher Satisfaction Levels</h2>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="section-content bg-gradient-to-br from-brand-pink/50 to-white p-4 rounded-lg">
+                <div class="section-content bg-gradient-to-br from-brand-bg/50 to-white p-4 rounded-lg">
                     <canvas id="satisfactionChart"></canvas>
                 </div>
                 <div class="space-y-4">
@@ -261,21 +300,85 @@
                             <li>Only 5% reported dissatisfaction</li>
                         </ul>
                     </div>
+                    <div class="section-content bg-white p-4 rounded-lg border border-gray-100">
+                        <h3 class="font-semibold text-brand-purple">Key Insights</h3>
+                        <p class="text-gray-700 mt-2 leading-relaxed">
+                            The teacher satisfaction survey reveals a strongly positive environment with three-quarters of the staff expressing high satisfaction levels. This overwhelming positive response suggests effective school management and supportive working conditions.
+                        </p>
+                        <div class="mt-4 grid grid-cols-2 gap-4">
+                            <div class="bg-brand-bg/20 p-3 rounded-lg">
+                                <p class="text-brand-purple font-semibold">Strengths</p>
+                                <ul class="text-gray-700 text-sm mt-1 list-disc ml-4">
+                                    <li>High overall satisfaction rate</li>
+                                    <li>Minimal dissatisfaction</li>
+                                </ul>
+                            </div>
+                            <div class="bg-brand-bg/20 p-3 rounded-lg">
+                                <p class="text-brand-purple font-semibold">Areas to Monitor</p>
+                                <ul class="text-gray-700 text-sm mt-1 list-disc ml-4">
+                                    <li>20% moderate satisfaction</li>
+                                    <li>5% improvement potential</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Knowledge, Skills & Attitude Summary -->
+        <section class="gradient-border bg-white/95 rounded-xl shadow-sm p-8 mb-12">
+            <div class="section-header">
+                <span class="text-brand-orange text-sm font-medium uppercase tracking-wider">Section 3: Summary of Knowledge, Skills & Attitude</span>
+                <h2 class="text-3xl font-bold text-brand-purple mt-2">Overall Performance Categories</h2>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="section-content bg-gradient-to-br from-brand-bg/50 to-white p-4 rounded-lg">
+                    <canvas id="ksaChart"></canvas>
+                </div>
+                <div class="space-y-4">
+                    <div class="section-content bg-white p-4 rounded-lg border border-gray-100">
+                        <h3 class="font-semibold text-brand-purple">Category Overview</h3>
+                        <ul class="list-disc ml-4 mt-2 text-gray-700">
+                            <li>Knowledge: <span class="text-brand-purple font-semibold">85%</span></li>
+                            <li>Skills: <span class="text-brand-purple font-semibold">78%</span></li>
+                            <li>Attitude: <span class="text-brand-purple font-semibold">92%</span></li>
+                        </ul>
+                    </div>
+                    <div class="section-content bg-white p-4 rounded-lg border border-gray-100">
+                        <h3 class="font-semibold text-brand-purple">Key Insights</h3>
+                        <p class="text-gray-700 mt-2 leading-relaxed">
+                            The analysis shows a well-balanced distribution across all three categories, with particularly strong performance in Attitude. This indicates successful implementation of holistic development approaches.
+                        </p>
+                        <div class="mt-4 grid grid-cols-2 gap-4">
+                            <div class="bg-brand-bg/20 p-3 rounded-lg">
+                                <p class="text-brand-purple font-semibold">Highlights</p>
+                                <ul class="text-gray-700 text-sm mt-1 list-disc ml-4">
+                                    <li>Exceptional attitude scores</li>
+                                    <li>Strong knowledge foundation</li>
+                                </ul>
+                            </div>
+                            <div class="bg-brand-bg/20 p-3 rounded-lg">
+                                <p class="text-brand-purple font-semibold">Focus Areas</p>
+                                <ul class="text-gray-700 text-sm mt-1 list-disc ml-4">
+                                    <li>Skills enhancement</li>
+                                    <li>Maintain attitude momentum</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
         <!-- Course Quiz Outcomes -->
         <section class="gradient-border bg-white/95 rounded-xl shadow-sm p-8 mb-12">
-            <div class="flex items-center space-x-4 mb-8">
-                <div class="w-1.5 h-12 bg-gradient-to-b from-brand-orange to-brand-purple rounded-full"></div>
-                <div>
-                    <span class="text-brand-orange text-sm font-medium uppercase tracking-wider">Section 3</span>
-                    <h2 class="text-3xl font-bold text-brand-purple">Course Quiz Outcomes</h2>
-                </div>
+            <div class="section-header">
+                <span class="text-brand-orange text-sm font-medium uppercase tracking-wider">Section 4: Knowledge Level</span>
+                <h2 class="text-3xl font-bold text-brand-purple mt-2">Course Quiz Outcomes</h2>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="section-content bg-gradient-to-br from-brand-pink/50 to-white p-4 rounded-lg">
+                <div class="section-content bg-gradient-to-br from-brand-bg/50 to-white p-4 rounded-lg">
                     <canvas id="quizChart"></canvas>
                 </div>
                 <div class="space-y-4">
@@ -287,62 +390,142 @@
                             <li>Areas for improvement identified in Science</li>
                         </ul>
                     </div>
+                    <div class="section-content bg-white p-4 rounded-lg border border-gray-100">
+                        <h3 class="font-semibold text-brand-purple">Summary Analysis</h3>
+                        <p class="text-gray-700 mt-2 leading-relaxed">
+                            The quiz results demonstrate strong overall performance across subjects, with Mathematics leading the achievement metrics. The consistently high success rate indicates effective knowledge transfer and understanding of core concepts.
+                        </p>
+                        <div class="mt-4 grid grid-cols-2 gap-4">
+                            <div class="bg-brand-bg/20 p-3 rounded-lg">
+                                <p class="text-brand-purple font-semibold">Strengths</p>
+                                <ul class="text-gray-700 text-sm mt-1 list-disc ml-4">
+                                    <li>Outstanding Math scores</li>
+                                    <li>Above-average English results</li>
+                                </ul>
+                            </div>
+                            <div class="bg-brand-bg/20 p-3 rounded-lg">
+                                <p class="text-brand-purple font-semibold">Development Areas</p>
+                                <ul class="text-gray-700 text-sm mt-1 list-disc ml-4">
+                                    <li>Science performance</li>
+                                    <li>Cross-subject integration</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
         <!-- Workshop Pre and Post-test Outcomes -->
         <section class="gradient-border bg-white/95 rounded-xl shadow-sm p-8 mb-12">
-            <div class="flex items-center space-x-4 mb-8">
-                <div class="w-1.5 h-12 bg-gradient-to-b from-brand-orange to-brand-purple rounded-full"></div>
-                <div>
-                    <span class="text-brand-orange text-sm font-medium uppercase tracking-wider">Section 4</span>
-                    <h2 class="text-3xl font-bold text-brand-purple">Difference Between Pre-Test and Post-Test Result</h2>
-                </div>
+            <div class="section-header">
+                <span class="text-brand-orange text-sm font-medium uppercase tracking-wider">Section 5: Knowledge Level</span>
+                <h2 class="text-3xl font-bold text-brand-purple mt-2">Knowledge Improvement through workshop</h2>
             </div>
             <div class="grid grid-cols-1 gap-6">
-                <div class="section-content bg-gradient-to-br from-brand-pink/50 to-white p-4 rounded-lg" style="height: 500px;">
+                <div class="section-content bg-gradient-to-br from-brand-bg/50 to-white p-4 rounded-lg" style="height: 500px;">
                     <canvas id="workshopChart"></canvas>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="section-content bg-white p-4 rounded-lg border border-gray-100">
+                        <h3 class="font-semibold text-brand-purple">Workshop Performance Overview</h3>
+                        <ul class="list-disc ml-4 mt-2 text-gray-700">
+                            <li>Significant improvement in Assessment knowledge (40.5% increase)</li>
+                            <li>Strong progress in Classroom Management (26.2% growth)</li>
+                            <li>Notable advancement in Mathematics (33.3% enhancement)</li>
+                            <li>Substantial English skills development (34.1% improvement)</li>
+                        </ul>
+                    </div>
+                    <div class="section-content bg-white p-4 rounded-lg border border-gray-100">
+                        <h3 class="font-semibold text-brand-purple">Key Insights</h3>
+                        <p class="text-gray-700 mt-2 leading-relaxed">
+                            The pre and post-test results demonstrate substantial improvement across all workshop topics, with Assessment in The New Curriculum showing the most dramatic progress. This indicates highly effective workshop delivery and strong participant engagement.
+                        </p>
+                        <div class="mt-4 grid grid-cols-2 gap-4">
+                            <div class="bg-brand-bg/20 p-3 rounded-lg">
+                                <p class="text-brand-purple font-semibold">Major Achievements</p>
+                                <ul class="text-gray-700 text-sm mt-1 list-disc ml-4">
+                                    <li>Highest growth in Assessment</li>
+                                    <li>Consistent improvement across subjects</li>
+                                </ul>
+                            </div>
+                            <div class="bg-brand-bg/20 p-3 rounded-lg">
+                                <p class="text-brand-purple font-semibold">Recommendations</p>
+                                <ul class="text-gray-700 text-sm mt-1 list-disc ml-4">
+                                    <li>Maintain workshop momentum</li>
+                                    <li>Share best practices</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
         <!-- Workshop Feedback -->
         <section class="gradient-border bg-white/95 rounded-xl shadow-sm p-8 mb-12">
-            <div class="flex items-center space-x-4 mb-8">
-                <div class="w-1.5 h-12 bg-gradient-to-b from-brand-orange to-brand-purple rounded-full"></div>
-                <div>
-                    <span class="text-brand-orange text-sm font-medium uppercase tracking-wider">Section 5</span>
-                    <h2 class="text-3xl font-bold text-brand-purple">Improvement level in Percentage</h2>
-                </div>
+            <div class="section-header">
+                <span class="text-brand-orange text-sm font-medium uppercase tracking-wider">Section 6: Knowledge Level</span>
+                <h2 class="text-3xl font-bold text-brand-purple mt-2">Knowledge Improvement in Percentage</h2>
             </div>
             <div class="grid grid-cols-1 gap-6">
-                <div class="section-content bg-gradient-to-br from-brand-pink/50 to-white p-4 rounded-lg" style="height: 400px;">
+                <div class="section-content bg-gradient-to-br from-brand-bg/50 to-white p-4 rounded-lg" style="height: 400px;">
                     <canvas id="feedbackChart"></canvas>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="section-content bg-white p-4 rounded-lg border border-gray-100">
+                        <h3 class="font-semibold text-brand-purple">Performance Analysis</h3>
+                        <ul class="list-disc ml-4 mt-2 text-gray-700">
+                            <li>Assessment shows highest improvement at 81%</li>
+                            <li>English skills improved by 55.8%</li>
+                            <li>Classroom Management enhanced by 52.4%</li>
+                            <li>Mathematics knowledge increased by 49.9%</li>
+                        </ul>
+                    </div>
+                    <div class="section-content bg-white p-4 rounded-lg border border-gray-100">
+                        <h3 class="font-semibold text-brand-purple">Key Insights</h3>
+                        <p class="text-gray-700 mt-2 leading-relaxed">
+                            The improvement percentages demonstrate significant progress across all areas, with Assessment in The New Curriculum showing exceptional growth. This indicates successful implementation of training programs and effective knowledge transfer.
+                        </p>
+                        <div class="mt-4 grid grid-cols-2 gap-4">
+                            <div class="bg-brand-bg/20 p-3 rounded-lg">
+                                <p class="text-brand-purple font-semibold">Key Achievements</p>
+                                <ul class="text-gray-700 text-sm mt-1 list-disc ml-4">
+                                    <li>Outstanding Assessment growth</li>
+                                    <li>Balanced improvement across subjects</li>
+                                </ul>
+                            </div>
+                            <div class="bg-brand-bg/20 p-3 rounded-lg">
+                                <p class="text-brand-purple font-semibold">Focus Points</p>
+                                <ul class="text-gray-700 text-sm mt-1 list-disc ml-4">
+                                    <li>Mathematics enhancement</li>
+                                    <li>Sustain improvement momentum</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
 
         <!-- Classroom Observation Scores -->
         <section class="gradient-border bg-white/95 rounded-xl shadow-sm p-8 mb-12">
-            <div class="flex items-center space-x-4 mb-8">
-                <div class="w-1.5 h-12 bg-gradient-to-b from-brand-orange to-brand-purple rounded-full"></div>
-                <div>
-                    <span class="text-brand-orange text-sm font-medium uppercase tracking-wider">Section 6</span>
-                    <h2 class="text-3xl font-bold text-brand-purple">Classroom Observation Scores</h2>
-                </div>
+            <div class="section-header">
+                <span class="text-brand-orange text-sm font-medium uppercase tracking-wider">Section 7: Skill Level</span>
+                <h2 class="text-3xl font-bold text-brand-purple mt-2">Classroom Observation Scores</h2>
             </div>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="section-content bg-gradient-to-br from-brand-pink/50 to-white p-4 rounded-lg">
+            <div class="grid grid-cols-1 gap-6">
+                <div class="section-content bg-gradient-to-br from-brand-bg/50 to-white p-4 rounded-lg" style="height: 400px;">
                     <canvas id="observationChart"></canvas>
                 </div>
                 <div class="space-y-4">
                     <div class="section-content bg-white p-4 rounded-lg border border-gray-100">
-                        <h3 class="font-semibold text-brand-purple">Observation Highlights</h3>
+                        <h3 class="font-semibold text-brand-purple">Competence Area Analysis</h3>
                         <ul class="list-disc ml-4 mt-2 text-gray-700">
-                            <li>Strong student engagement observed</li>
-                            <li>Effective use of teaching aids</li>
-                            <li>Clear communication of learning objectives</li>
+                            <li>Strong performance in Lesson Planning and Instructions</li>
+                            <li>Effective implementation of Assessment and Feedback</li>
+                            <li>Notable achievements in Social and Emotional Learning</li>
+                            <li>Room for growth in Inclusive Classroom practices</li>
                         </ul>
                     </div>
                 </div>
@@ -351,15 +534,12 @@
 
         <!-- Coaching Outcomes -->
         <section class="gradient-border bg-white/95 rounded-xl shadow-sm p-8 mb-12">
-            <div class="flex items-center space-x-4 mb-8">
-                <div class="w-1.5 h-12 bg-gradient-to-b from-brand-orange to-brand-purple rounded-full"></div>
-                <div>
-                    <span class="text-brand-orange text-sm font-medium uppercase tracking-wider">Section 7</span>
-                    <h2 class="text-3xl font-bold text-brand-purple">Coaching Outcomes</h2>
-                </div>
+            <div class="section-header">
+                <span class="text-brand-orange text-sm font-medium uppercase tracking-wider">Section 8</span>
+                <h2 class="text-3xl font-bold text-brand-purple mt-2">Coaching Outcomes</h2>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="section-content bg-gradient-to-br from-brand-pink/50 to-white p-4 rounded-lg">
+                <div class="section-content bg-gradient-to-br from-brand-bg/50 to-white p-4 rounded-lg">
                     <canvas id="coachingChart"></canvas>
                 </div>
                 <div class="space-y-4">
@@ -522,16 +702,68 @@
 
         // Observation Chart
         new Chart(document.getElementById('observationChart'), {
-            type: 'radar',
+            type: 'bar',
             data: {
-                labels: ['Student Engagement', 'Teaching Methods', 'Classroom Management', 'Content Delivery', 'Time Management'],
+                labels: ['Lesson Plan', 'Instructions', 'Assessment Feedback', 'Inclusive Classroom', 'Social and Emotional Learning', 'Motivation'],
                 datasets: [{
-                    label: 'Score',
-                    data: [85, 88, 75, 82, 79],
-                    backgroundColor: 'rgba(245, 165, 36, 0.2)',
+                    label: 'Competence Score (%)',
+                    data: [85, 88, 82, 75, 80, 78],
+                    backgroundColor: 'rgba(245, 165, 36, 0.7)',
                     borderColor: '#F5A524',
-                    pointBackgroundColor: '#F5A524'
+                    borderWidth: 1
                 }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                layout: {
+                    padding: {
+                        bottom: 40
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.1)',
+                            drawBorder: false
+                        },
+                        title: {
+                            display: true,
+                            text: 'Score (%)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            maxRotation: 45,
+                            minRotation: 45
+                        }
+                    }
+                },
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Competence Area',
+                        font: {
+                            size: 16,
+                            family: 'Inter',
+                            weight: 'bold'
+                        },
+                        color: '#4B2840',
+                        position: 'bottom',
+                        padding: {
+                            top: 20
+                        }
+                    },
+                    legend: {
+                        display: false
+                    }
+                },
+                barPercentage: 0.7
             }
         });
 
@@ -601,6 +833,56 @@
                 },
                 barPercentage: 0.5
             }
+        });
+
+        // Knowledge, Skills & Attitude Chart
+        new Chart(document.getElementById('ksaChart'), {
+            type: 'pie',
+            data: {
+                labels: ['Knowledge', 'Skills', 'Attitude'],
+                datasets: [{
+                    data: [85, 78, 92],
+                    backgroundColor: [
+                        'rgba(245, 165, 36, 0.8)',  // Knowledge - Orange
+                        'rgba(75, 40, 64, 0.8)',    // Skills - Purple
+                        'rgba(245, 165, 36, 0.5)'   // Attitude - Light Orange
+                    ],
+                    borderColor: '#ffffff',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            font: {
+                                family: 'Inter'
+                            },
+                            padding: 20
+                        }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.label + ': ' + context.raw + '%';
+                            }
+                        }
+                    },
+                    datalabels: {
+                        color: '#4B2840',
+                        font: {
+                            weight: 'bold',
+                            family: 'Inter'
+                        },
+                        formatter: (value) => {
+                            return value + '%';
+                        }
+                    }
+                }
+            },
+            plugins: [ChartDataLabels]
         });
 
         // Add print-specific chart options
