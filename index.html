@@ -226,8 +226,8 @@
     <header class="glass-effect py-12 px-4 shadow-lg mb-12 border-b border-white/20 print:border-gray-200">
         <div class="container mx-auto max-w-6xl">
             <div class="flex flex-col items-center text-center space-y-4">
-                <span class="text-brand-orange text-sm font-semibold tracking-wider uppercase px-4 py-1 bg-brand-orange/10 rounded-full">Report</span>
-                <h1 class="text-5xl font-bold text-brand-purple">Final Report </h1>
+                <span class="text-brand-orange text-sm font-semibold tracking-wider uppercase px-4 py-1 bg-brand-orange/10 rounded-full">Annual Report</span>
+                <h1 class="text-5xl font-bold text-brand-purple">Final Report of Year - 2</h1>
                 <div class="flex items-center space-x-3 mt-4">
                     <h2 class="text-2xl font-semibold text-brand-orange">SCHOOL NAME</h2>
                     <span class="text-gray-400">|</span>
@@ -260,10 +260,6 @@
                                 <td class="py-4 text-gray-700 font-medium">Commitment to apply (Percent)</td>
                                 <td class="py-4 text-brand-purple font-bold text-right">100%</td>
                             </tr>
-                            <tr class="hover:bg-white/50 transition-colors">
-                                <td class="py-4 text-gray-700 font-medium">Permission to promo consent (Percent)</td>
-                                <td class="py-4 text-brand-purple font-bold text-right">71.4%</td>
-                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -273,8 +269,7 @@
                         <p class="text-gray-700 leading-relaxed">
                             The data indicates that <span class="font-semibold text-brand-purple">7 teachers</span> are present to complete this feedback form, 
                             <span class="text-brand-orange font-semibold">57.1%</span> are women. They showed 
-                            that their commitment to apply is <span class="text-brand-purple font-semibold">100%</span> and 
-                            promotional consent authorization is <span class="text-brand-orange font-semibold">71.4%</span>.
+                            that their commitment to apply is <span class="text-brand-purple font-semibold">100%</span>.
                         </p>
                     </div>
                 </div>
@@ -391,7 +386,7 @@
                         </ul>
                     </div>
                     <div class="section-content bg-white p-4 rounded-lg border border-gray-100">
-                        <h3 class="font-semibold text-brand-purple">Key Insights</h3>
+                        <h3 class="font-semibold text-brand-purple">Summary Analysis</h3>
                         <p class="text-gray-700 mt-2 leading-relaxed">
                             The quiz results demonstrate strong overall performance across subjects, with Mathematics leading the achievement metrics. The consistently high success rate indicates effective knowledge transfer and understanding of core concepts.
                         </p>
@@ -535,7 +530,7 @@
         <!-- Coaching Outcomes -->
         <section class="gradient-border bg-white/95 rounded-xl shadow-sm p-8 mb-12">
             <div class="section-header">
-                <span class="text-brand-orange text-sm font-medium uppercase tracking-wider">Section 8: Skills</span>
+                <span class="text-brand-orange text-sm font-medium uppercase tracking-wider">Section 8</span>
                 <h2 class="text-3xl font-bold text-brand-purple mt-2">Coaching Outcomes</h2>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -818,6 +813,10 @@
                         },
                         ticks: {
                             stepSize: 25
+                        },
+                        title: {
+                            display: true,
+                            text: 'Percentage'
                         }
                     },
                     x: {
@@ -844,7 +843,7 @@
                     data: [85, 78, 92],
                     backgroundColor: [
                         'rgba(245, 165, 36, 0.8)',  // Knowledge - Orange
-                        'rgba(75, 40, 64, 0.8)',    // Skills - Purple
+                        '#532747',                   // Skills - Purple (updated color)
                         'rgba(245, 165, 36, 0.5)'   // Attitude - Light Orange
                     ],
                     borderColor: '#ffffff',
@@ -871,7 +870,10 @@
                         }
                     },
                     datalabels: {
-                        color: '#4B2840',
+                        color: function(context) {
+                            // Make the Skills label white, keep others as default color
+                            return context.dataIndex === 1 ? '#ffffff' : '#4B2840';
+                        },
                         font: {
                             weight: 'bold',
                             family: 'Inter'
@@ -892,3 +894,5 @@
             });
         });
     </script>
+</body>
+</html> 
